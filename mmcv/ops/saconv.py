@@ -1,11 +1,12 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+from distutils.version import LooseVersion
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 from mmcv.cnn import CONV_LAYERS, ConvAWS2d, constant_init
 from mmcv.ops.deform_conv import deform_conv2d
-from mmcv.utils import TORCH_VERSION, digit_version
+from mmcv.utils import TORCH_VERSION
 
 
 @CONV_LAYERS.register_module(name='SAC')
@@ -107,10 +108,10 @@ class SAConv2d(ConvAWS2d):
             out_s = deform_conv2d(x, offset, weight, self.stride, self.padding,
                                   self.dilation, self.groups, 1)
         else:
-            if (TORCH_VERSION == 'parrots'
-                    or digit_version(TORCH_VERSION) < digit_version('1.5.0')):
+            if (LooseVersion(TORCH_VERSION) < LooseVersion('1.5.0')
+                    or TORCH_VERSION == 'parrots'):
                 out_s = super().conv2d_forward(x, weight)
-            elif digit_version(TORCH_VERSION) >= digit_version('1.8.0'):
+            elif LooseVersion(TORCH_VERSION) >= LooseVersion('1.8.0'):
                 # bias is a required argument of _conv_forward in torch 1.8.0
                 out_s = super()._conv_forward(x, weight, zero_bias)
             else:
@@ -125,10 +126,10 @@ class SAConv2d(ConvAWS2d):
             out_l = deform_conv2d(x, offset, weight, self.stride, self.padding,
                                   self.dilation, self.groups, 1)
         else:
-            if (TORCH_VERSION == 'parrots'
-                    or digit_version(TORCH_VERSION) < digit_version('1.5.0')):
+            if (LooseVersion(TORCH_VERSION) < LooseVersion('1.5.0')
+                    or TORCH_VERSION == 'parrots'):
                 out_l = super().conv2d_forward(x, weight)
-            elif digit_version(TORCH_VERSION) >= digit_version('1.8.0'):
+            elif LooseVersion(TORCH_VERSION) >= LooseVersion('1.8.0'):
                 # bias is a required argument of _conv_forward in torch 1.8.0
                 out_l = super()._conv_forward(x, weight, zero_bias)
             else:

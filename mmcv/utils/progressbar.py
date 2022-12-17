@@ -1,4 +1,4 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+# Copyright (c) Open-MMLab. All rights reserved.
 import sys
 from collections.abc import Iterable
 from multiprocessing import Pool

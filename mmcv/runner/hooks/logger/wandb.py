@@ -1,4 +1,4 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+# Copyright (c) Open-MMLab. All rights reserved.
 from ...dist_utils import master_only
 from ..hook import HOOKS
 from .base import LoggerHook

@@ -1,4 +1,3 @@
-# Copyright (c) OpenMMLab. All rights reserved.
 import mmcv
 from .hook import HOOKS, Hook
 from .lr_updater import annealing_cos, annealing_linear, format_param

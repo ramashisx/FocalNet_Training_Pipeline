@@ -1,4 +1,4 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+# Copyright (c) Open-MMLab. All rights reserved.
 from __future__ import division
 
 import numpy as np

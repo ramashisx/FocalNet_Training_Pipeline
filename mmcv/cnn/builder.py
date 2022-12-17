@@ -1,4 +1,3 @@
-# Copyright (c) OpenMMLab. All rights reserved.
 from ..runner import Sequential
 from ..utils import Registry, build_from_cfg
 

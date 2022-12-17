@@ -1,4 +1,4 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+# Copyright (c) Open-MMLab. All rights reserved.
 from collections.abc import Mapping, Sequence
 
 import torch

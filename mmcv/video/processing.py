@@ -1,4 +1,4 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+# Copyright (c) Open-MMLab. All rights reserved.
 import os
 import os.path as osp
 import subprocess
@@ -141,7 +141,7 @@ def concat_video(video_list,
         log_level (str): Logging level of ffmpeg.
         print_cmd (bool): Whether to print the final ffmpeg command.
     """
-    tmp_filehandler, tmp_filename = tempfile.mkstemp(suffix='.txt', text=True)
+    _, tmp_filename = tempfile.mkstemp(suffix='.txt', text=True)
     with open(tmp_filename, 'w') as f:
         for filename in video_list:
             f.write(f'file {osp.abspath(filename)}\n')
@@ -156,5 +156,4 @@ def concat_video(video_list,
         print_cmd,
         pre_options='-f concat -safe 0',
         **options)
-    os.close(tmp_filehandler)
     os.remove(tmp_filename)

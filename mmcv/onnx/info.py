@@ -1,7 +1,4 @@
-# Copyright (c) OpenMMLab. All rights reserved.
 import os
-
-import torch
 
 
 def is_custom_op_loaded():
@@ -18,4 +15,4 @@ def is_custom_op_loaded():
             flag = os.path.exists(ort_lib_path)
         except (ImportError, ModuleNotFoundError):
             pass
-    return flag or torch.__version__ == 'parrots'
+    return flag

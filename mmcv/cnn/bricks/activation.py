@@ -1,9 +1,10 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+from distutils.version import LooseVersion
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from mmcv.utils import TORCH_VERSION, build_from_cfg, digit_version
+from mmcv.utils import TORCH_VERSION, build_from_cfg
 from .registry import ACTIVATION_LAYERS
 
 for module in [
@@ -72,7 +73,7 @@ class GELU(nn.Module):
 
 
 if (TORCH_VERSION == 'parrots'
-        or digit_version(TORCH_VERSION) < digit_version('1.4')):
+        or LooseVersion(TORCH_VERSION) < LooseVersion('1.4')):
     ACTIVATION_LAYERS.register_module(module=GELU)
 else:
     ACTIVATION_LAYERS.register_module(module=nn.GELU)

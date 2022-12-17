@@ -1,4 +1,3 @@
-# Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -19,12 +18,12 @@ class CARAFENaiveFunction(Function):
     @staticmethod
     def symbolic(g, features, masks, kernel_size, group_size, scale_factor):
         return g.op(
-            'mmcv::MMCVCARAFENaive',
+            'MMCVCARAFENaive',
             features,
             masks,
-            kernel_size_i=kernel_size,
-            group_size_i=group_size,
-            scale_factor_f=scale_factor)
+            kernel_size=kernel_size,
+            group_size=group_size,
+            scale_factor=scale_factor)
 
     @staticmethod
     def forward(ctx, features, masks, kernel_size, group_size, scale_factor):
@@ -102,12 +101,12 @@ class CARAFEFunction(Function):
     @staticmethod
     def symbolic(g, features, masks, kernel_size, group_size, scale_factor):
         return g.op(
-            'mmcv::MMCVCARAFE',
+            'MMCVCARAFE',
             features,
             masks,
-            kernel_size_i=kernel_size,
-            group_size_i=group_size,
-            scale_factor_f=scale_factor)
+            kernel_size=kernel_size,
+            group_size=group_size,
+            scale_factor=scale_factor)
 
     @staticmethod
     def forward(ctx, features, masks, kernel_size, group_size, scale_factor):
@@ -269,7 +268,7 @@ class CARAFEPack(nn.Module):
         mask_channel = int(mask_c / float(self.up_kernel**2))
         mask = mask.view(n, mask_channel, -1, h, w)
 
-        mask = F.softmax(mask, dim=2, dtype=mask.dtype)
+        mask = F.softmax(mask, dim=2)
         mask = mask.view(n, mask_c, h, w).contiguous()
 
         return mask

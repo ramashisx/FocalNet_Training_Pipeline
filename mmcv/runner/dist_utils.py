@@ -1,14 +1,17 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+# Copyright (c) Open-MMLab. All rights reserved.
 import functools
 import os
 import subprocess
 from collections import OrderedDict
+from distutils.version import LooseVersion
 
 import torch
 import torch.multiprocessing as mp
 from torch import distributed as dist
 from torch._utils import (_flatten_dense_tensors, _take_tensors,
                           _unflatten_dense_tensors)
+
+from mmcv.utils import TORCH_VERSION
 
 
 def init_dist(launcher, backend='nccl', **kwargs):
@@ -76,7 +79,14 @@ def _init_dist_slurm(backend, port=None):
 
 
 def get_dist_info():
-    if dist.is_available() and dist.is_initialized():
+    if LooseVersion(TORCH_VERSION) < LooseVersion('1.0'):
+        initialized = dist._initialized
+    else:
+        if dist.is_available():
+            initialized = dist.is_initialized()
+        else:
+            initialized = False
+    if initialized:
         rank = dist.get_rank()
         world_size = dist.get_world_size()
     else:

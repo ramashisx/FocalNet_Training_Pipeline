@@ -1,4 +1,4 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+# Copyright (c) Open-MMLab. All rights reserved.
 import os
 import os.path as osp
 from pathlib import Path
@@ -36,7 +36,7 @@ def symlink(src, dst, overwrite=True, **kwargs):
     os.symlink(src, dst, **kwargs)
 
 
-def scandir(dir_path, suffix=None, recursive=False, case_sensitive=True):
+def scandir(dir_path, suffix=None, recursive=False):
     """Scan a directory to find the interested files.
 
     Args:
@@ -45,11 +45,9 @@ def scandir(dir_path, suffix=None, recursive=False, case_sensitive=True):
             interested in. Default: None.
         recursive (bool, optional): If set to True, recursively scan the
             directory. Default: False.
-        case_sensitive (bool, optional) : If set to False, ignore the case of
-            suffix. Default: True.
 
     Returns:
-        A generator for all the interested files with relative paths.
+        A generator for all the interested files with relative pathes.
     """
     if isinstance(dir_path, (str, Path)):
         dir_path = str(dir_path)
@@ -59,25 +57,20 @@ def scandir(dir_path, suffix=None, recursive=False, case_sensitive=True):
     if (suffix is not None) and not isinstance(suffix, (str, tuple)):
         raise TypeError('"suffix" must be a string or tuple of strings')
 
-    if suffix is not None and not case_sensitive:
-        suffix = suffix.lower() if isinstance(suffix, str) else tuple(
-            item.lower() for item in suffix)
-
     root = dir_path
 
-    def _scandir(dir_path, suffix, recursive, case_sensitive):
+    def _scandir(dir_path, suffix, recursive):
         for entry in os.scandir(dir_path):
             if not entry.name.startswith('.') and entry.is_file():
                 rel_path = osp.relpath(entry.path, root)
-                _rel_path = rel_path if case_sensitive else rel_path.lower()
-                if suffix is None or _rel_path.endswith(suffix):
+                if suffix is None or rel_path.endswith(suffix):
                     yield rel_path
             elif recursive and os.path.isdir(entry.path):
                 # scan recursively if entry.path is a directory
-                yield from _scandir(entry.path, suffix, recursive,
-                                    case_sensitive)
+                yield from _scandir(
+                    entry.path, suffix=suffix, recursive=recursive)
 
-    return _scandir(dir_path, suffix, recursive, case_sensitive)
+    return _scandir(dir_path, suffix=suffix, recursive=recursive)
 
 
 def find_vcs_root(path, markers=('.git', )):

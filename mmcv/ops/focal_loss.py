@@ -1,4 +1,3 @@
-# Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
 from torch.autograd import Function
@@ -17,13 +16,13 @@ class SigmoidFocalLossFunction(Function):
     @staticmethod
     def symbolic(g, input, target, gamma, alpha, weight, reduction):
         return g.op(
-            'mmcv::MMCVSigmoidFocalLoss',
+            'MMCVSigmoidFocalLoss',
             input,
             target,
-            gamma_f=gamma,
-            alpha_f=alpha,
-            weight_f=weight,
-            reduction_s=reduction)
+            gamma=gamma,
+            alpha=alpha,
+            weight=weight,
+            reduction=reduction)
 
     @staticmethod
     def forward(ctx,
@@ -111,13 +110,13 @@ class SoftmaxFocalLossFunction(Function):
     @staticmethod
     def symbolic(g, input, target, gamma, alpha, weight, reduction):
         return g.op(
-            'mmcv::MMCVSoftmaxFocalLoss',
+            'MMCVSoftmaxFocalLoss',
             input,
             target,
-            gamma_f=gamma,
-            alpha_f=alpha,
-            weight_f=weight,
-            reduction_s=reduction)
+            gamma=gamma,
+            alpha=alpha,
+            weight=weight,
+            reduction=reduction)
 
     @staticmethod
     def forward(ctx,

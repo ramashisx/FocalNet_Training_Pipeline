@@ -1,4 +1,3 @@
-// Copyright (c) OpenMMLab. All rights reserved
 // from
 // https://github.com/rosinality/stylegan2-pytorch/blob/master/op/upfirdn2d.cpp
 #include "pytorch_cpp_helper.hpp"

@@ -1,4 +1,3 @@
-// Copyright (c) OpenMMLab. All rights reserved
 #include "pytorch_cpp_helper.hpp"
 
 #ifdef MMCV_WITH_CUDA

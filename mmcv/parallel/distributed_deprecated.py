@@ -1,11 +1,13 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+# Copyright (c) Open-MMLab. All rights reserved.
+from distutils.version import LooseVersion
+
 import torch
 import torch.distributed as dist
 import torch.nn as nn
 from torch._utils import (_flatten_dense_tensors, _take_tensors,
                           _unflatten_dense_tensors)
 
-from mmcv.utils import TORCH_VERSION, digit_version
+from mmcv.utils import TORCH_VERSION
 from .registry import MODULE_WRAPPERS
 from .scatter_gather import scatter_kwargs
 
@@ -40,8 +42,7 @@ class MMDistributedDataParallel(nn.Module):
             self._dist_broadcast_coalesced(module_states,
                                            self.broadcast_bucket_size)
         if self.broadcast_buffers:
-            if (TORCH_VERSION != 'parrots'
-                    and digit_version(TORCH_VERSION) < digit_version('1.0')):
+            if LooseVersion(TORCH_VERSION) < LooseVersion('1.0'):
                 buffers = [b.data for b in self.module._all_buffers()]
             else:
                 buffers = [b.data for b in self.module.buffers()]

@@ -1,4 +1,4 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+# Copyright (c) Open-MMLab. All rights reserved.
 import ast
 import copy
 import os
@@ -26,7 +26,6 @@ else:
 
 BASE_KEY = '_base_'
 DELETE_KEY = '_delete_'
-DEPRECATION_KEY = '_deprecation_'
 RESERVED_KEYS = ['filename', 'text', 'pretty_text']
 
 
@@ -121,7 +120,7 @@ class Config:
             regexp = r'\{\{\s*' + str(key) + r'\s*\}\}'
             value = value.replace('\\', '/')
             config_file = re.sub(regexp, value, config_file)
-        with open(temp_config_name, 'w', encoding='utf-8') as tmp_config_file:
+        with open(temp_config_name, 'w') as tmp_config_file:
             tmp_config_file.write(config_file)
 
     @staticmethod
@@ -139,7 +138,7 @@ class Config:
             base_var_dict[randstr] = base_var
             regexp = r'\{\{\s*' + BASE_KEY + r'\.' + base_var + r'\s*\}\}'
             config_file = re.sub(regexp, f'"{randstr}"', config_file)
-        with open(temp_config_name, 'w', encoding='utf-8') as tmp_config_file:
+        with open(temp_config_name, 'w') as tmp_config_file:
             tmp_config_file.write(config_file)
         return base_var_dict
 
@@ -218,19 +217,6 @@ class Config:
             # close temp file
             temp_config_file.close()
 
-        # check deprecation information
-        if DEPRECATION_KEY in cfg_dict:
-            deprecation_info = cfg_dict.pop(DEPRECATION_KEY)
-            warning_msg = f'The config file {filename} will be deprecated ' \
-                'in the future.'
-            if 'expected' in deprecation_info:
-                warning_msg += f' Please use {deprecation_info["expected"]} ' \
-                    'instead.'
-            if 'reference' in deprecation_info:
-                warning_msg += ' More information can be found at ' \
-                    f'{deprecation_info["reference"]}'
-            warnings.warn(warning_msg)
-
         cfg_text = filename + '\n'
         with open(filename, 'r', encoding='utf-8') as f:
             # Setting encoding explicitly to resolve coding issue on windows
@@ -251,13 +237,11 @@ class Config:
 
             base_cfg_dict = dict()
             for c in cfg_dict_list:
-                duplicate_keys = base_cfg_dict.keys() & c.keys()
-                if len(duplicate_keys) > 0:
-                    raise KeyError('Duplicate key is not allowed among bases. '
-                                   f'Duplicate keys: {duplicate_keys}')
+                if len(base_cfg_dict.keys() & c.keys()) > 0:
+                    raise KeyError('Duplicate key is not allowed among bases')
                 base_cfg_dict.update(c)
 
-            # Substitute base variables from strings to their actual values
+            # Subtitute base variables from strings to their actual values
             cfg_dict = Config._substitute_base_vars(cfg_dict, base_var_dict,
                                                     base_cfg_dict)
 
@@ -353,8 +337,7 @@ class Config:
             warnings.warn(
                 'Please check "file_format", the file format may be .py')
         with tempfile.NamedTemporaryFile(
-                'w', encoding='utf-8', suffix=file_format,
-                delete=False) as temp_file:
+                'w', suffix=file_format, delete=False) as temp_file:
             temp_file.write(cfg_str)
             # on windows, previous implementation cause error
             # see PR 1077 for details
@@ -537,7 +520,7 @@ class Config:
             if file is None:
                 return self.pretty_text
             else:
-                with open(file, 'w', encoding='utf-8') as f:
+                with open(file, 'w') as f:
                     f.write(self.pretty_text)
         else:
             import mmcv
